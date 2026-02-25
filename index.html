@@ -48,13 +48,13 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
         flex-wrap: wrap;
+        gap: 12px;
       }
 
       header h1 {
         margin: 0;
-        font-size: 1.6rem;
+        font-size: 1.7rem;
         letter-spacing: 0.08em;
       }
 
@@ -65,28 +65,23 @@
         align-items: center;
       }
 
-      .toolbar label,
-      .toolbar button {
+      .toolbar label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
         font-weight: bold;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
       }
 
-      .toolbar select {
+      .toolbar select,
+      .toolbar button {
         appearance: none;
         border: 1px solid var(--border);
+        border-radius: 6px;
         padding: 6px 12px;
-        border-radius: 6px;
         background: linear-gradient(180deg, #edf1ff, #dfe6ff);
-        font-family: inherit;
         font-weight: bold;
-      }
-
-      .toolbar button {
-        background: linear-gradient(180deg, #edf1ff, #dfe6ff);
-        border: 1px solid var(--border);
-        padding: 6px 14px;
-        border-radius: 6px;
-        color: var(--muted);
+        font-size: 0.85rem;
         cursor: pointer;
         box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
       }
@@ -96,88 +91,25 @@
         cursor: not-allowed;
       }
 
-      .pin-controls {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 12px;
-        align-items: center;
-      }
-
-      .pin-chip {
-        padding: 10px 14px;
-        border-radius: 10px;
-        border: 1px solid var(--border);
-        background: #fff;
-        font-size: 0.9rem;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
-      }
-
-      .pin-chip span:first-child {
-        font-size: 0.7rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-      }
-
-      .pin-chip.start {
-        border-color: #0f9d58;
-        color: #0f9d58;
-      }
-
-      .pin-chip.end {
-        border-color: #4285f4;
-        color: #4285f4;
-      }
-
-      .pin-radio {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      .pin-radio label {
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 6px 12px;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        cursor: pointer;
-        background: linear-gradient(180deg, #ffffff, #e7ebff);
-      }
-
-      .pin-radio input {
-        accent-color: #1a73e8;
-      }
-
-      .pin-radio input:checked + span {
-        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.35);
-        border-radius: 6px;
-      }
-
-      .pin-hint {
-        font-size: 0.85rem;
-        color: var(--muted);
-        grid-column: 1 / -1;
-      }
-
       .map-shell {
         position: relative;
         background: var(--panel);
         border-radius: 16px;
         border: 2px solid var(--border);
-        padding: 12px;
+        padding: 16px;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
         display: grid;
-        gap: 12px;
+        gap: 16px;
+      }
+
+      .search-area {
+        display: grid;
+        gap: 10px;
       }
 
       .search-row {
         display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
         background: var(--panel-alt);
         padding: 10px;
         border-radius: 12px;
@@ -195,65 +127,95 @@
       }
 
       .search-row button {
-        background: var(--accent);
-        border: none;
-        color: #fff;
-        font-weight: bold;
-        border-radius: 6px;
-        padding: 0 18px;
-        cursor: pointer;
-        transition: background 0.2s ease;
+        min-width: 48px;
       }
 
-      .search-row button:hover {
-        background: var(--accent-dark);
-      }
-
-      #map-container {
-        position: relative;
-        min-height: 420px;
-        border-radius: 14px;
-        overflow: hidden;
-        border: 1px solid #b0b8c9;
-      }
-
-      #map {
-        width: 100%;
-        height: 100%;
-        min-height: 400px;
+      .search-row .small-btn {
+        width: 36px;
+        padding: 0;
+        font-size: 1.2rem;
+        line-height: 1;
       }
 
       .results {
-        max-height: 200px;
+        max-height: 220px;
         overflow-y: auto;
         background: #f8f9ff;
         border: 1px inset #cfd6e4;
         border-radius: 10px;
-        padding: 8px;
+        padding: 10px;
         display: grid;
         gap: 6px;
       }
 
+      .hidden {
+        display: none !important;
+      }
+
+      .results-header {
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
       .result-row {
-        padding: 10px 12px;
-        border-radius: 8px;
         background: #fff;
         border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 10px 12px;
         cursor: pointer;
         display: flex;
         flex-direction: column;
         gap: 4px;
-        font-size: 0.95rem;
+        text-align: left;
       }
 
       .result-row:hover,
       .result-row.active {
-        background: linear-gradient(90deg, #e4edff, #f2f5ff);
         border-color: var(--accent);
+        background: linear-gradient(90deg, #e4edff, #f2f5ff);
+      }
+
+      .result-row strong {
+        font-size: 0.95rem;
       }
 
       .result-row small {
         color: var(--muted);
+      }
+
+      .result-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .result-badge.start {
+        background: rgba(15, 157, 88, 0.1);
+        color: #0f9d58;
+        border: 1px solid rgba(15, 157, 88, 0.3);
+      }
+
+      .result-badge.end {
+        background: rgba(66, 133, 244, 0.1);
+        color: #4285f4;
+        border: 1px solid rgba(66, 133, 244, 0.3);
+      }
+
+      .user-location-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: rgba(66, 133, 244, 0.9);
+        border: 3px solid rgba(255, 255, 255, 0.95);
+        box-shadow: 0 0 8px rgba(66, 133, 244, 0.7);
       }
 
       .history-shell {
@@ -270,6 +232,8 @@
         margin: 0;
         font-size: 0.85rem;
         letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
       }
 
       .history-list {
@@ -306,25 +270,21 @@
         border: 1px solid var(--border);
       }
 
-      .pin-icon {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.5);
+      #map-container {
+        position: relative;
+        min-height: 420px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #b0b8c9;
       }
 
-      .pin-icon.start {
-        background: #0f9d58;
-        box-shadow: 0 0 0 2px rgba(15, 157, 88, 0.6);
+      #map {
+        width: 100%;
+        height: 100%;
+        min-height: 400px;
       }
 
-      .pin-icon.end {
-        background: #4285f4;
-        box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.6);
-      }
-
-      @media (max-width: 860px) {
+      @media (max-width: 850px) {
         body {
           padding: 8px;
         }
@@ -333,8 +293,8 @@
           padding: 16px;
         }
 
-        .pin-controls {
-          grid-template-columns: 1fr;
+        .search-row {
+          flex-wrap: wrap;
         }
       }
     </style>
@@ -362,45 +322,23 @@
               <option value="imperial">Imperial</option>
             </select>
           </label>
-          <button type="button" data-use-location>Use my location</button>
-          <button type="button" data-swap-endpoints disabled>Swap endpoints</button>
           <button type="button" data-clear-route disabled>Clear route</button>
         </div>
       </header>
-      <div class="pin-controls">
-        <div class="pin-chip start">
-          <span>Start pin</span>
-          <strong data-start-chip>unset</strong>
-        </div>
-        <div class="pin-chip end">
-          <span>End pin</span>
-          <strong data-end-chip>unset</strong>
-        </div>
-        <div class="pin-radio">
-          <label>
-            <input type="radio" name="pin-mode" value="start" checked data-pin-mode />
-            <span>Set Start</span>
-          </label>
-          <label>
-            <input type="radio" name="pin-mode" value="end" data-pin-mode />
-            <span>Set End</span>
-          </label>
-          <label>
-            <input type="radio" name="pin-mode" value="off" data-pin-mode />
-            <span>Browse</span>
-          </label>
-        </div>
-        <div class="pin-hint" data-pin-hint>Click the map to place Start pin.</div>
-      </div>
       <div class="map-shell">
-        <form class="search-row" data-search-form>
-          <input type="search" placeholder="Search anywhere, e.g. 'Golden Gate Bridge'" data-search-input autocomplete="off" />
-          <button type="submit" data-search-button>Search</button>
-        </form>
-        <div id="map-container">
-          <div id="map"></div>
+        <div class="search-area">
+          <form class="search-row" data-primary-form>
+            <input type="search" placeholder="Search for a place" data-primary-input autocomplete="off" />
+            <button type="submit">Search</button>
+            <button type="button" class="small-btn" data-add-dest>+</button>
+          </form>
+          <form class="search-row hidden" data-dest-row>
+            <input type="search" placeholder="Then search for a second location" data-dest-input autocomplete="off" />
+            <button type="submit">Search</button>
+            <button type="button" class="small-btn" data-remove-dest>×</button>
+          </form>
         </div>
-        <div class="results" data-results></div>
+        <div class="results hidden" data-results></div>
         <div class="history-shell">
           <h3>Recent searches</h3>
           <div class="history-list" data-history></div>
@@ -410,8 +348,8 @@
           <span data-route-summary>Route: none</span>
           <span data-coords>Lat: -- | Lon: -- | Zoom: --</span>
         </div>
-        <div class="footer-hint">
-          Append <code>?s=your+query</code> to the URL to auto-run a search. History preserves your last 6 queries.
+        <div id="map-container">
+          <div id="map"></div>
         </div>
       </div>
     </div>
@@ -424,98 +362,162 @@
         zoom: 9.5,
       });
 
-      map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
-
-      const searchForm = document.querySelector('[data-search-form]');
-      const searchInput = document.querySelector('[data-search-input]');
-      const searchButton = document.querySelector('[data-search-button]');
+      const primaryForm = document.querySelector('[data-primary-form]');
+      const primaryInput = document.querySelector('[data-primary-input]');
+      const destRow = document.querySelector('[data-dest-row]');
+      const destForm = destRow;
+      const destInput = document.querySelector('[data-dest-input]');
+      const addDestBtn = document.querySelector('[data-add-dest]');
+      const removeDestBtn = document.querySelector('[data-remove-dest]');
+      removeDestBtn.hidden = true;
       const resultsContainer = document.querySelector('[data-results]');
-      const statusText = document.querySelector('[data-status]');
-      const coordsText = document.querySelector('[data-coords]');
-      const routeSummaryText = document.querySelector('[data-route-summary]');
-      const unitsSelect = document.querySelector('[data-units-select]');
-      const pinHint = document.querySelector('[data-pin-hint]');
-      const startChip = document.querySelector('[data-start-chip]');
-      const endChip = document.querySelector('[data-end-chip]');
       const historyList = document.querySelector('[data-history]');
-      const swapButton = document.querySelector('[data-swap-endpoints]');
+      const statusText = document.querySelector('[data-status]');
+      const routeSummaryText = document.querySelector('[data-route-summary]');
+      const coordsText = document.querySelector('[data-coords]');
+      const unitsSelect = document.querySelector('[data-units-select]');
       const clearButton = document.querySelector('[data-clear-route]');
-      const useLocationButton = document.querySelector('[data-use-location]');
+      const showResults = () => resultsContainer.classList.remove('hidden');
+      const hideResults = () => resultsContainer.classList.add('hidden');
 
-      const historyKey = 'indie-maps-history';
-      const startKey = 'indie-maps-start';
-      const endKey = 'indie-maps-end';
-      const unitsKey = 'indie-maps-units';
-      const pinModeKey = 'indie-maps-pinmode';
+      const HISTORY_KEY = 'indie-maps-history';
+      const START_KEY = 'indie-maps-start';
+      const DEST_KEY = 'indie-maps-dest';
+      const DEST_QUERY_KEY = 'indie-maps-dest-query';
+      const PRIMARY_QUERY_KEY = 'indie-maps-primary-query';
+      const UNITS_KEY = 'indie-maps-units';
+      const ROUTE_SUMMARY_KEY = 'indie-maps-route';
 
-      let lastResults = [];
+      const params = new URLSearchParams(window.location.search);
+      const initialPrimaryParam = params.get('s');
+      const initialDestParam = params.get('d');
+
       let historyEntries = [];
-      let routeStart = null;
-      let routeEnd = null;
+      let primaryQuery = '';
+      let destQuery = '';
+      let startData = null;
+      let destData = null;
       let startMarker = null;
-      let endMarker = null;
+      let destMarker = null;
       let routeSummary = null;
-      let routeSourceId = 'route-source';
-      let routeLineId = 'route-line';
-      let routeHaloId = 'route-line-halo';
-      let hasRunSearch = false;
-      const initialSearch = new URLSearchParams(window.location.search).get('s');
+      let routeActive = false;
+      let destVisible = false;
+      let userLocationMarker = null;
+      let locationWatchId = null;
 
-      function updateCoords() {
+      const routeSourceId = 'route-source';
+      const routeLineId = 'route-line';
+      const routeHaloId = 'route-line-halo';
+
+      map.on('move', () => {
         const center = map.getCenter();
-        const zoom = map.getZoom().toFixed(2);
-        coordsText.textContent = `Lat: ${center.lat.toFixed(5)} | Lon: ${center.lng.toFixed(5)} | Zoom: ${zoom}`;
+        coordsText.textContent = `Lat: ${center.lat.toFixed(5)} | Lon: ${center.lng.toFixed(5)} | Zoom: ${map.getZoom().toFixed(2)}`;
+      });
+
+      function updateUserLocationMarker(coords) {
+        if (!coords) {
+          if (userLocationMarker) {
+            userLocationMarker.remove();
+            userLocationMarker = null;
+          }
+          return;
+        }
+        const lat = coords.latitude ?? coords.lat;
+        const lon = coords.longitude ?? coords.lon;
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+          return;
+        }
+        if (userLocationMarker) {
+          userLocationMarker.setLngLat([lon, lat]);
+          return;
+        }
+        const dot = document.createElement('div');
+        dot.className = 'user-location-dot';
+        userLocationMarker = new maplibregl.Marker({ element: dot })
+          .setLngLat([lon, lat])
+          .addTo(map);
       }
 
-      map.on('move', updateCoords);
+      function startLocationWatch() {
+        if (!navigator.geolocation || locationWatchId) {
+          return;
+        }
+        locationWatchId = navigator.geolocation.watchPosition(
+          (position) => {
+            updateUserLocationMarker(position.coords);
+          },
+          () => {
+            // ignore errors; we already show status when permission fails
+          },
+          { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+        );
+      }
 
-      function loadLocalState() {
-        const storedUnits = localStorage.getItem(unitsKey);
+      function loadState() {
+        const storedHistory = localStorage.getItem(HISTORY_KEY);
+        if (storedHistory) {
+          try {
+            historyEntries = JSON.parse(storedHistory);
+          } catch (error) {
+            historyEntries = [];
+          }
+        }
+
+        const storedStart = localStorage.getItem(START_KEY);
+        if (storedStart) {
+          try {
+            startData = JSON.parse(storedStart);
+          } catch (error) {
+            startData = null;
+          }
+        }
+
+        const storedDest = localStorage.getItem(DEST_KEY);
+        if (storedDest) {
+          try {
+            destData = JSON.parse(storedDest);
+          } catch (error) {
+            destData = null;
+          }
+        }
+
+        const storedRoute = localStorage.getItem(ROUTE_SUMMARY_KEY);
+        if (storedRoute) {
+          try {
+            routeSummary = JSON.parse(storedRoute);
+          } catch (error) {
+            routeSummary = null;
+          }
+        }
+
+        const storedDestQuery = localStorage.getItem(DEST_QUERY_KEY);
+        if (storedDestQuery) {
+          destQuery = storedDestQuery;
+        }
+
+        const storedPrimaryQuery = localStorage.getItem(PRIMARY_QUERY_KEY);
+        if (storedPrimaryQuery && !initialPrimaryParam) {
+          primaryInput.value = storedPrimaryQuery;
+          primaryQuery = storedPrimaryQuery;
+        }
+
+        const storedUnits = localStorage.getItem(UNITS_KEY);
         if (storedUnits) {
           unitsSelect.value = storedUnits;
         }
 
-        const storedMode = localStorage.getItem(pinModeKey);
-        if (storedMode) {
-          const input = document.querySelector(`[name="pin-mode"][value="${storedMode}"]`);
-          if (input) {
-            input.checked = true;
-          }
-        }
-
-        const storedStart = localStorage.getItem(startKey);
-        if (storedStart) {
-          try {
-            routeStart = JSON.parse(storedStart);
-          } catch (e) {}
-        }
-
-        const storedEnd = localStorage.getItem(endKey);
-        if (storedEnd) {
-          try {
-            routeEnd = JSON.parse(storedEnd);
-          } catch (e) {}
-        }
-
-        const storedHistory = localStorage.getItem(historyKey);
-        if (storedHistory) {
-          try {
-            historyEntries = JSON.parse(storedHistory);
-          } catch (e) {
-            historyEntries = [];
-          }
-        }
+        destVisible = false;
       }
 
       function saveHistory() {
-        localStorage.setItem(historyKey, JSON.stringify(historyEntries));
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(historyEntries));
         renderHistory();
       }
 
       function addHistory(query) {
         const trimmed = query.trim();
         if (!trimmed) return;
-        historyEntries = historyEntries.filter((item) => item.query !== trimmed);
+        historyEntries = historyEntries.filter((entry) => entry.query !== trimmed);
         historyEntries.unshift({ query: trimmed, ts: Date.now() });
         if (historyEntries.length > 6) historyEntries.pop();
         saveHistory();
@@ -533,124 +535,63 @@
           button.className = 'history-item';
           button.textContent = entry.query;
           button.addEventListener('click', () => {
-            searchInput.value = entry.query;
-            searchForm.dispatchEvent(new Event('submit', { cancelable: true }));
+            collapseDestRow();
+            primaryInput.value = entry.query;
+            runSearch('primary', entry.query, { trackHistory: true });
           });
           historyList.appendChild(button);
         });
       }
 
-      function getActivePinMode() {
-        const selected = document.querySelector('[name="pin-mode"]:checked');
-        return selected ? selected.value : 'start';
-      }
-
-      function savePinMode(value) {
-        localStorage.setItem(pinModeKey, value);
-        updatePinHint();
-      }
-
-      function updatePinHint(extra) {
-        const mode = getActivePinMode();
-        if (mode === 'off') {
-          pinHint.textContent = 'Pins are disabled. Select Start or End before clicking the map.';
-          return;
-        }
-        pinHint.textContent = extra || `Click the map to place ${mode === 'start' ? 'Start' : 'End'} pin.`;
-      }
-
-      function formatPinLabel(data) {
-        if (!data) return 'unset';
-        return data.label || `${data.lat.toFixed(5)}, ${data.lon.toFixed(5)}`;
-      }
-
-      function buildMarker(className) {
-        const el = document.createElement('div');
-        el.className = `pin-icon ${className}`;
-        return el;
-      }
-
-      function setStart(data, persist = true) {
-        routeStart = data;
+      function setStartData(data, options = {}) {
+        const { store = true, placeMarker = true } = options;
+        startData = data;
         if (startMarker) startMarker.remove();
-        if (data) {
-          startMarker = new maplibregl.Marker(buildMarker('start')).setLngLat(data.lon ? [data.lon, data.lat] : [0, 0]).addTo(map);
-          localStorage.setItem(startKey, JSON.stringify(data));
-          if (persist) swapButton.disabled = !routeEnd;
-        } else {
-          startMarker = null;
-          localStorage.removeItem(startKey);
-          swapButton.disabled = true;
+        startMarker = null;
+        if (data && placeMarker) {
+          startMarker = new maplibregl.Marker({ color: '#0f9d58' })
+            .setLngLat([data.lon, data.lat])
+            .addTo(map);
         }
-        startChip.textContent = formatPinLabel(data);
-        maybeRoute();
-        clearButton.disabled = !(routeStart || routeEnd);
-      }
-
-      function setEnd(data, persist = true) {
-        routeEnd = data;
-        if (endMarker) endMarker.remove();
-        if (data) {
-          endMarker = new maplibregl.Marker(buildMarker('end')).setLngLat(data.lon ? [data.lon, data.lat] : [0, 0]).addTo(map);
-          localStorage.setItem(endKey, JSON.stringify(data));
-          if (persist) swapButton.disabled = !routeStart;
-        } else {
-          endMarker = null;
-          localStorage.removeItem(endKey);
-          swapButton.disabled = true;
+        if (data && store) {
+          localStorage.setItem(START_KEY, JSON.stringify(data));
         }
-        endChip.textContent = formatPinLabel(data);
-        maybeRoute();
-        clearButton.disabled = !(routeStart || routeEnd);
+        if (!data && store) {
+          localStorage.removeItem(START_KEY);
+        }
+        clearButton.disabled = !(startData || destData);
+        updateURL();
       }
 
-      function swapEndpoints() {
-        const tempStart = routeStart;
-        setStart(routeEnd, false);
-        setEnd(tempStart, false);
-        maybeRoute();
+      function setDestData(data, options = {}) {
+        const { store = true, placeMarker = true, keepMarker = false } = options;
+        destData = data;
+        if (destMarker && placeMarker) {
+          destMarker.remove();
+          destMarker = null;
+        }
+        if (data && destVisible && placeMarker) {
+          destMarker = new maplibregl.Marker({ color: '#4285f4' })
+            .setLngLat([data.lon, data.lat])
+            .addTo(map);
+        }
+        if (data && store) {
+          localStorage.setItem(DEST_KEY, JSON.stringify(data));
+        }
+        if (!data && store) {
+          localStorage.removeItem(DEST_KEY);
+        }
+        clearButton.disabled = !(startData || destData);
+        updateURL();
       }
 
-      function clearRoute() {
-        setStart(null, false);
-        setEnd(null, false);
-        removeRoute();
-        statusText.textContent = 'Ready.';
-        routeSummary = null;
-        routeSummaryText.textContent = 'Route: none';
-        swapButton.disabled = true;
-        clearButton.disabled = true;
-        localStorage.removeItem(startKey);
-        localStorage.removeItem(endKey);
-      }
-
-      function ensureRouteLayer(geojson) {
-        if (map.getSource(routeSourceId)) {
-          map.getSource(routeSourceId).setData(geojson);
+      function updateRouteSummaryText() {
+        if (!routeSummary) {
+          routeSummaryText.textContent = 'Route: none';
           return;
         }
-        map.addSource(routeSourceId, { type: 'geojson', data: geojson });
-        map.addLayer({
-          id: routeHaloId,
-          type: 'line',
-          source: routeSourceId,
-          layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': 'rgba(255, 255, 255, 0.6)', 'line-width': 14 },
-        });
-        map.addLayer({
-          id: routeLineId,
-          type: 'line',
-          source: routeSourceId,
-          layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': '#4285f4', 'line-width': 6, 'line-opacity': 0.9 },
-        });
-      }
-
-      function removeRoute() {
-        [routeLineId, routeHaloId].forEach((layerId) => {
-          if (map.getLayer(layerId)) map.removeLayer(layerId);
-        });
-        if (map.getSource(routeSourceId)) map.removeSource(routeSourceId);
+        const suffix = routeActive && destVisible ? '' : ' (cached)';
+        routeSummaryText.textContent = `Route: ${formatDistance(routeSummary.distance)} · ${formatDuration(routeSummary.duration)}${suffix}`;
       }
 
       function formatDistance(meters) {
@@ -665,122 +606,143 @@
         return `${minutes} min`;
       }
 
-      function updateRouteSummary(data) {
-        routeSummary = data;
-        routeSummaryText.textContent = `Route: ${formatDistance(data.distance)} · ${formatDuration(data.duration)}`;
+      function updateURL() {
+        const url = new URL(window.location);
+        if (primaryQuery) {
+          url.searchParams.set('s', primaryQuery);
+        } else {
+          url.searchParams.delete('s');
+        }
+        if (destVisible && destQuery) {
+          url.searchParams.set('d', destQuery);
+        } else {
+          url.searchParams.delete('d');
+        }
+        history.replaceState(null, '', url.toString());
+      }
+
+      function ensureDestMarker() {
+        if (!destVisible || !destData) return;
+        if (destMarker) return;
+        destMarker = new maplibregl.Marker({ color: '#4285f4' })
+          .setLngLat([destData.lon, destData.lat])
+          .addTo(map);
+      }
+
+      function removeRouteLayer() {
+        [routeLineId, routeHaloId].forEach((layerId) => {
+          if (map.getLayer(layerId)) map.removeLayer(layerId);
+        });
+        if (map.getSource(routeSourceId)) map.removeSource(routeSourceId);
+        routeActive = false;
       }
 
       async function maybeRoute() {
-        if (!routeStart || !routeEnd) {
-          return;
-        }
+        if (!startData || !destData || !destVisible) return;
         statusText.textContent = 'Calculating route...';
         try {
-          const resp = await fetch(
-            `https://router.project-osrm.org/route/v1/driving/${routeStart.lon},${routeStart.lat};${routeEnd.lon},${routeEnd.lat}?overview=full&geometries=geojson`
-          );
-          const data = await resp.json();
-          if (!data.routes || !data.routes.length) {
-            statusText.textContent = 'Routing failed—we could not find a route.';
+          const resp = await fetch(`https://router.project-osrm.org/route/v1/driving/${startData.lon},${startData.lat};${destData.lon},${destData.lat}?overview=full&geometries=geojson`);
+          const json = await resp.json();
+          if (!json.routes || !json.routes.length) {
+            statusText.textContent = 'No route available for those points.';
             return;
           }
-          const route = data.routes[0];
+          const route = json.routes[0];
           ensureRouteLayer({ type: 'FeatureCollection', features: [{ type: 'Feature', geometry: route.geometry }] });
-          updateRouteSummary({ distance: route.distance, duration: route.duration });
+          routeSummary = { distance: route.distance, duration: route.duration };
+          localStorage.setItem(ROUTE_SUMMARY_KEY, JSON.stringify(routeSummary));
+          routeActive = true;
+          updateRouteSummaryText();
           statusText.textContent = 'Route ready.';
-          swapButton.disabled = false;
         } catch (error) {
           console.error(error);
           statusText.textContent = 'Routing failed. Try again later.';
         }
       }
 
-      function updateRouteSummaryText() {
-        if (!routeSummary) return;
-        routeSummaryText.textContent = `Route: ${formatDistance(routeSummary.distance)} · ${formatDuration(routeSummary.duration)}`;
-      }
-
-      function reverseGeocode(lat, lon) {
-        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
-        return fetch(url)
-          .then((res) => res.json())
-          .then((data) => data.display_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`)
-          .catch(() => `${lat.toFixed(5)}, ${lon.toFixed(5)}`);
-      }
-
-      async function placePin(mode, lngLat) {
-        const label = await reverseGeocode(lngLat.lat, lngLat.lng);
-        const payload = { lat: lngLat.lat, lon: lngLat.lng, label };
-        if (mode === 'start') {
-          setStart(payload);
-        } else if (mode === 'end') {
-          setEnd(payload);
-        }
-        updatePinHint(`${mode === 'start' ? 'Start' : 'End'} pin set to ${label}.`);
-        statusText.textContent = `${mode === 'start' ? 'Start' : 'End'} point locked.`;
-      }
-
-      map.on('click', (event) => {
-        const mode = getActivePinMode();
-        if (mode === 'off') return;
-        placePin(mode, event.lngLat);
-      });
-
-      function handleCurrentLocation() {
-        if (!navigator.geolocation) {
-          statusText.textContent = 'Geolocation is not supported in this browser.';
-          return;
-        }
-        statusText.textContent = 'Locating you...';
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const mode = getActivePinMode() === 'off' ? 'start' : getActivePinMode();
-            const { latitude, longitude } = position.coords;
-            map.flyTo({ center: [longitude, latitude], zoom: 14 });
-            placePin(mode, { lat: latitude, lon: longitude });
-          },
-          () => {
-            statusText.textContent = 'Location access denied.';
-          }
-        );
-      }
-
-      function runSearch(query) {
-        if (!query) return;
-        searchButton.classList.add('loading');
-        statusText.textContent = 'Searching...';
-        resultsContainer.textContent = '';
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=6&q=${encodeURIComponent(query)}`, {
-          headers: { 'Accept-Language': 'en' },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            lastResults = data;
-            renderResults(data);
-            addHistory(query);
-            hasRunSearch = true;
-            if (!routeStart && !routeEnd) {
-              const first = data[0];
-              if (first) map.flyTo({ center: [parseFloat(first.lon), parseFloat(first.lat)], zoom: 14 });
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-            statusText.textContent = 'Geocoding failed. Try again later.';
-          })
-          .finally(() => {
-            searchButton.classList.remove('loading');
+      function ensureRouteLayer(geojson) {
+        if (map.getSource(routeSourceId)) {
+          map.getSource(routeSourceId).setData(geojson);
+        } else {
+          map.addSource(routeSourceId, { type: 'geojson', data: geojson });
+          map.addLayer({
+            id: routeHaloId,
+            type: 'line',
+            source: routeSourceId,
+            layout: { 'line-join': 'round', 'line-cap': 'round' },
+            paint: { 'line-color': 'rgba(255, 255, 255, 0.6)', 'line-width': 14 },
           });
+          map.addLayer({
+            id: routeLineId,
+            type: 'line',
+            source: routeSourceId,
+            layout: { 'line-join': 'round', 'line-cap': 'round' },
+            paint: { 'line-color': '#4285f4', 'line-width': 6, 'line-opacity': 0.9 },
+          });
+        }
       }
 
-      function renderResults(results) {
+      function collapseDestRow() {
+        if (!destVisible) return;
+        destRow.classList.add('hidden');
+        destVisible = false;
+        addDestBtn.disabled = false;
+        removeDestBtn.hidden = true;
+        if (destMarker) {
+          destMarker.remove();
+          destMarker = null;
+        }
+        removeRouteLayer();
+        updateRouteSummaryText();
+        updateURL();
+      }
+
+      function showDestRow() {
+        if (destVisible) return;
+        destRow.classList.remove('hidden');
+        destVisible = true;
+        addDestBtn.disabled = true;
+        removeDestBtn.hidden = false;
+        if (!destInput.value && destQuery) {
+          destInput.value = destQuery;
+        }
+        if (destData) {
+          ensureDestMarker();
+          maybeRoute();
+        }
+        updateURL();
+      }
+
+      function clearEverything() {
+        setStartData(null);
+        setDestData(null);
+        primaryInput.value = '';
+        destInput.value = '';
+        primaryQuery = '';
+        destQuery = '';
+        destData = null;
+        destMarker && destMarker.remove();
+        destMarker = null;
+        collapseDestRow();
+        routeSummary = null;
+        routeSummaryText.textContent = 'Route: none';
+        localStorage.removeItem(PRIMARY_QUERY_KEY);
+        localStorage.removeItem(DEST_QUERY_KEY);
+        localStorage.removeItem(ROUTE_SUMMARY_KEY);
+        statusText.textContent = 'Ready.';
+        removeRouteLayer();
+        updateURL();
+      }
+
+      function renderResults(results, mode) {
         resultsContainer.innerHTML = '';
         if (!results.length) {
-          resultsContainer.textContent = 'No results.';
-          statusText.textContent = 'No matches found.';
+          statusText.textContent = 'No results.';
+          hideResults();
           return;
         }
-        results.forEach((result, index) => {
+        showResults();
+        results.forEach((result) => {
           const row = document.createElement('button');
           row.type = 'button';
           row.className = 'result-row';
@@ -788,60 +750,166 @@
             <strong>${result.display_name}</strong>
             <small>${result.type}</small>
           `;
+          const badge = document.createElement('span');
+          badge.className = `result-badge ${mode === 'primary' ? 'start' : 'end'}`;
+          badge.textContent = mode === 'primary' ? 'start' : 'destination';
+          row.appendChild(badge);
           row.addEventListener('click', () => {
-            resultsContainer.querySelectorAll('.result-row').forEach((el) => el.classList.remove('active'));
-            row.classList.add('active');
-            map.flyTo({ center: [parseFloat(result.lon), parseFloat(result.lat)], zoom: 14 });
-            statusText.textContent = `Centered on ${result.display_name}`;
+            applyResult(mode, result);
           });
           resultsContainer.appendChild(row);
         });
-        statusText.textContent = `Showing ${results.length} result${results.length === 1 ? '' : 's'}.`;
       }
 
-      searchForm.addEventListener('submit', (event) => {
+      function applyResult(mode, result) {
+        const payload = {
+          lat: parseFloat(result.lat),
+          lon: parseFloat(result.lon),
+          label: result.display_name,
+        };
+        if (mode === 'primary') {
+          setStartData(payload);
+          map.flyTo({ center: [payload.lon, payload.lat], zoom: 14 });
+          statusText.textContent = `Start set to ${payload.label}`;
+          primaryQuery = primaryInput.value.trim();
+          if (primaryQuery) {
+            localStorage.setItem(PRIMARY_QUERY_KEY, primaryQuery);
+            addHistory(primaryQuery);
+          }
+        } else {
+          setDestData(payload);
+          map.flyTo({ center: [payload.lon, payload.lat], zoom: 14 });
+          statusText.textContent = `Destination set to ${payload.label}`;
+          destQuery = destInput.value.trim();
+          if (destQuery) {
+            localStorage.setItem(DEST_QUERY_KEY, destQuery);
+          }
+        }
+        updateURL();
+        maybeRoute();
+      }
+
+      async function runSearch(mode, query, options = {}) {
+        const trimmed = query.trim();
+        if (!trimmed) return;
+        if (mode === 'primary') {
+          primaryInput.value = trimmed;
+          primaryQuery = trimmed;
+        } else {
+          destInput.value = trimmed;
+          destQuery = trimmed;
+        }
+        statusText.textContent = `Searching for ${trimmed}...`;
+        resultsContainer.textContent = '';
+        hideResults();
+        try {
+          const resp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=6&q=${encodeURIComponent(trimmed)}`, {
+            headers: { 'Accept-Language': 'en' },
+          });
+          const data = await resp.json();
+          if (!data.length) {
+            statusText.textContent = 'No matches found.';
+            return;
+          }
+          renderResults(data, mode);
+          applyResult(mode, data[0]);
+          if (mode === 'primary') {
+            addHistory(trimmed);
+            localStorage.setItem(PRIMARY_QUERY_KEY, trimmed);
+            if (destVisible && destData) {
+              maybeRoute();
+            }
+          } else {
+            localStorage.setItem(DEST_QUERY_KEY, trimmed);
+          }
+        } catch (error) {
+          console.error(error);
+          statusText.textContent = 'Search failed. Try again later.';
+        }
+      }
+
+      function locateUserAsStart() {
+        if (!navigator.geolocation) {
+          statusText.textContent = 'Geolocation not supported.';
+          return;
+        }
+        statusText.textContent = 'Detecting your location...';
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            const label = 'Your location';
+            const payload = { lat: latitude, lon: longitude, label };
+            setStartData(payload);
+            map.flyTo({ center: [longitude, latitude], zoom: 12 });
+            statusText.textContent = 'Centered on your location.';
+            updateUserLocationMarker(position.coords);
+            startLocationWatch();
+          },
+          () => {
+            statusText.textContent = 'Location denied.';
+          }
+        );
+      }
+
+      addDestBtn.addEventListener('click', () => {
+        showDestRow();
+        destInput.focus();
+      });
+
+      removeDestBtn.addEventListener('click', () => {
+        collapseDestRow();
+      });
+
+      primaryForm.addEventListener('submit', (event) => {
         event.preventDefault();
-        const query = searchInput.value.trim();
-        if (!query) return;
-        runSearch(query);
-        historyList.scrollTop = 0;
-        const url = new URL(window.location);
-        url.searchParams.set('s', query);
-        history.replaceState(null, '', url.toString());
+        runSearch('primary', primaryInput.value);
+        collapseDestRow();
+      });
+
+      destForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!destVisible) return;
+        runSearch('destination', destInput.value);
+      });
+
+      clearButton.addEventListener('click', () => {
+        clearEverything();
       });
 
       unitsSelect.addEventListener('change', () => {
-        localStorage.setItem(unitsKey, unitsSelect.value);
+        localStorage.setItem(UNITS_KEY, unitsSelect.value);
         updateRouteSummaryText();
       });
 
-      document.querySelectorAll('[data-pin-mode]').forEach((input) => {
-        input.addEventListener('change', () => {
-          savePinMode(input.value);
+      historyList.addEventListener('click', () => {
+        historyList.querySelectorAll('.history-item').forEach((btn) => {
+          btn.blur();
         });
       });
 
-      swapButton.addEventListener('click', () => swapEndpoints());
-      clearButton.addEventListener('click', () => clearRoute());
-      useLocationButton.addEventListener('click', () => handleCurrentLocation());
-
       map.on('load', () => {
-        updateCoords();
-        loadLocalState();
+        loadState();
         renderHistory();
-        updatePinHint();
-        if (routeStart) {
-          setStart(routeStart, false);
-          map.flyTo({ center: [routeStart.lon, routeStart.lat], zoom: 12 });
+        updateRouteSummaryText();
+        if (startData) {
+          setStartData(startData, { store: false });
+          map.flyTo({ center: [startData.lon, startData.lat], zoom: 12 });
         }
-        if (routeEnd) setEnd(routeEnd, false);
-        if (routeStart && routeEnd) maybeRoute();
-        if (initialSearch) {
-          searchInput.value = initialSearch;
-          runSearch(initialSearch);
-        } else if (!hasRunSearch && !routeStart && !routeEnd) {
-          handleCurrentLocation();
+        if (initialDestParam) {
+          showDestRow();
+          destInput.value = initialDestParam;
+          runSearch('destination', initialDestParam);
         }
+        if (initialPrimaryParam) {
+          primaryInput.value = initialPrimaryParam;
+          runSearch('primary', initialPrimaryParam);
+        } else if (!startData) {
+          locateUserAsStart();
+        }
+        if (!primaryQuery && primaryInput.value) {
+          primaryQuery = primaryInput.value.trim();
+        }
+        clearButton.disabled = !(startData || destData);
       });
     </script>
   </body>
