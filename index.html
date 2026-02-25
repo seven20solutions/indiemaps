@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Indie Maps</title>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" />
+    <style>
+      :root {
+        --bg: #f5f6f8;
+        --panel: #ffffff;
+        --panel-alt: #e7e9ef;
+        --accent: #1a73e8;
+        --accent-dark: #174ea6;
+        --muted: #5f6368;
+        --border: #cfd6e4;
+        --shadow: 0 6px 12px rgba(15, 23, 42, 0.15);
+        font-family: 'Verdana', 'Tahoma', sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at top, #ffffff 0%, #dfe6ff 35%, #b6c7f6 100%);
+        color: #1a1a1a;
+        display: flex;
+        justify-content: center;
+        padding: 16px;
+      }
+
+      .shell {
+        width: min(1200px, 100%);
+        min-height: 90vh;
+        background: linear-gradient(180deg, #fefefe 0%, #f1f4fe 100%);
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        padding: 24px;
+        display: grid;
+        gap: 16px;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 1.6rem;
+        letter-spacing: 0.08em;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .toolbar label,
+      .toolbar button {
+        font-weight: bold;
+        font-size: 0.85rem;
+      }
+
+      .toolbar select {
+        appearance: none;
+        border: 1px solid var(--border);
+        padding: 6px 12px;
+        border-radius: 6px;
+        background: linear-gradient(180deg, #edf1ff, #dfe6ff);
+        font-family: inherit;
+        font-weight: bold;
+      }
+
+      .toolbar button {
+        background: linear-gradient(180deg, #edf1ff, #dfe6ff);
+        border: 1px solid var(--border);
+        padding: 6px 14px;
+        border-radius: 6px;
+        color: var(--muted);
+        cursor: pointer;
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
+      }
+
+      .toolbar button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .pin-controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        align-items: center;
+      }
+
+      .pin-chip {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: #fff;
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
+      }
+
+      .pin-chip span:first-child {
+        font-size: 0.7rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .pin-chip.start {
+        border-color: #0f9d58;
+        color: #0f9d58;
+      }
+
+      .pin-chip.end {
+        border-color: #4285f4;
+        color: #4285f4;
+      }
+
+      .pin-radio {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .pin-radio label {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 6px 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        background: linear-gradient(180deg, #ffffff, #e7ebff);
+      }
+
+      .pin-radio input {
+        accent-color: #1a73e8;
+      }
+
+      .pin-radio input:checked + span {
+        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.35);
+        border-radius: 6px;
+      }
+
+      .pin-hint {
+        font-size: 0.85rem;
+        color: var(--muted);
+        grid-column: 1 / -1;
+      }
+
+      .map-shell {
+        position: relative;
+        background: var(--panel);
+        border-radius: 16px;
+        border: 2px solid var(--border);
+        padding: 12px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        display: grid;
+        gap: 12px;
+      }
+
+      .search-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        background: var(--panel-alt);
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
+      }
+
+      .search-row input {
+        flex: 1;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 10px 12px;
+        font-size: 1rem;
+        background: #fff;
+      }
+
+      .search-row button {
+        background: var(--accent);
+        border: none;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 6px;
+        padding: 0 18px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      .search-row button:hover {
+        background: var(--accent-dark);
+      }
+
+      #map-container {
+        position: relative;
+        min-height: 420px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #b0b8c9;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+        min-height: 400px;
+      }
+
+      .results {
+        max-height: 200px;
+        overflow-y: auto;
+        background: #f8f9ff;
+        border: 1px inset #cfd6e4;
+        border-radius: 10px;
+        padding: 8px;
+        display: grid;
+        gap: 6px;
+      }
+
+      .result-row {
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: #fff;
+        border: 1px solid transparent;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.95rem;
+      }
+
+      .result-row:hover,
+      .result-row.active {
+        background: linear-gradient(90deg, #e4edff, #f2f5ff);
+        border-color: var(--accent);
+      }
+
+      .result-row small {
+        color: var(--muted);
+      }
+
+      .history-shell {
+        background: #fff;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        padding: 10px 12px;
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.8);
+        display: grid;
+        gap: 6px;
+      }
+
+      .history-shell h3 {
+        margin: 0;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+      }
+
+      .history-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .history-item {
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, #edf1ff, #f8f9ff);
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        cursor: pointer;
+      }
+
+      .history-item:hover {
+        border-color: var(--accent);
+      }
+
+      .status-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .status-bar span {
+        background: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      .pin-icon {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 3px solid #fff;
+        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.5);
+      }
+
+      .pin-icon.start {
+        background: #0f9d58;
+        box-shadow: 0 0 0 2px rgba(15, 157, 88, 0.6);
+      }
+
+      .pin-icon.end {
+        background: #4285f4;
+        box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.6);
+      }
+
+      @media (max-width: 860px) {
+        body {
+          padding: 8px;
+        }
+
+        .shell {
+          padding: 16px;
+        }
+
+        .pin-controls {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header>
+        <h1>
+          <span style="color:#4285f4">I</span>
+          <span style="color:#db4437">n</span>
+          <span style="color:#f4b400">d</span>
+          <span style="color:#0f9d58">i</span>
+          <span style="color:#4285f4">e</span>
+          <span style="color:#db4437"> </span>
+          <span style="color:#f4b400">M</span>
+          <span style="color:#0f9d58">a</span>
+          <span style="color:#4285f4">p</span>
+          <span style="color:#db4437">s</span>
+        </h1>
+        <div class="toolbar">
+          <label>
+            Units:
+            <select data-units-select>
+              <option value="metric">Metric</option>
+              <option value="imperial">Imperial</option>
+            </select>
+          </label>
+          <button type="button" data-use-location>Use my location</button>
+          <button type="button" data-swap-endpoints disabled>Swap endpoints</button>
+          <button type="button" data-clear-route disabled>Clear route</button>
+        </div>
+      </header>
+      <div class="pin-controls">
+        <div class="pin-chip start">
+          <span>Start pin</span>
+          <strong data-start-chip>unset</strong>
+        </div>
+        <div class="pin-chip end">
+          <span>End pin</span>
+          <strong data-end-chip>unset</strong>
+        </div>
+        <div class="pin-radio">
+          <label>
+            <input type="radio" name="pin-mode" value="start" checked data-pin-mode />
+            <span>Set Start</span>
+          </label>
+          <label>
+            <input type="radio" name="pin-mode" value="end" data-pin-mode />
+            <span>Set End</span>
+          </label>
+          <label>
+            <input type="radio" name="pin-mode" value="off" data-pin-mode />
+            <span>Browse</span>
+          </label>
+        </div>
+        <div class="pin-hint" data-pin-hint>Click the map to place Start pin.</div>
+      </div>
+      <div class="map-shell">
+        <form class="search-row" data-search-form>
+          <input type="search" placeholder="Search anywhere, e.g. 'Golden Gate Bridge'" data-search-input autocomplete="off" />
+          <button type="submit" data-search-button>Search</button>
+        </form>
+        <div id="map-container">
+          <div id="map"></div>
+        </div>
+        <div class="results" data-results></div>
+        <div class="history-shell">
+          <h3>Recent searches</h3>
+          <div class="history-list" data-history></div>
+        </div>
+        <div class="status-bar">
+          <span data-status>Ready.</span>
+          <span data-route-summary>Route: none</span>
+          <span data-coords>Lat: -- | Lon: -- | Zoom: --</span>
+        </div>
+        <div class="footer-hint">
+          Append <code>?s=your+query</code> to the URL to auto-run a search. History preserves your last 6 queries.
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+    <script>
+      const map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://tiles.openfreemap.org/styles/liberty',
+        center: [13.388, 52.517],
+        zoom: 9.5,
+      });
+
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }));
+
+      const searchForm = document.querySelector('[data-search-form]');
+      const searchInput = document.querySelector('[data-search-input]');
+      const searchButton = document.querySelector('[data-search-button]');
+      const resultsContainer = document.querySelector('[data-results]');
+      const statusText = document.querySelector('[data-status]');
+      const coordsText = document.querySelector('[data-coords]');
+      const routeSummaryText = document.querySelector('[data-route-summary]');
+      const unitsSelect = document.querySelector('[data-units-select]');
+      const pinHint = document.querySelector('[data-pin-hint]');
+      const startChip = document.querySelector('[data-start-chip]');
+      const endChip = document.querySelector('[data-end-chip]');
+      const historyList = document.querySelector('[data-history]');
+      const swapButton = document.querySelector('[data-swap-endpoints]');
+      const clearButton = document.querySelector('[data-clear-route]');
+      const useLocationButton = document.querySelector('[data-use-location]');
+
+      const historyKey = 'indie-maps-history';
+      const startKey = 'indie-maps-start';
+      const endKey = 'indie-maps-end';
+      const unitsKey = 'indie-maps-units';
+      const pinModeKey = 'indie-maps-pinmode';
+
+      let lastResults = [];
+      let historyEntries = [];
+      let routeStart = null;
+      let routeEnd = null;
+      let startMarker = null;
+      let endMarker = null;
+      let routeSummary = null;
+      let routeSourceId = 'route-source';
+      let routeLineId = 'route-line';
+      let routeHaloId = 'route-line-halo';
+      let hasRunSearch = false;
+      const initialSearch = new URLSearchParams(window.location.search).get('s');
+
+      function updateCoords() {
+        const center = map.getCenter();
+        const zoom = map.getZoom().toFixed(2);
+        coordsText.textContent = `Lat: ${center.lat.toFixed(5)} | Lon: ${center.lng.toFixed(5)} | Zoom: ${zoom}`;
+      }
+
+      map.on('move', updateCoords);
+
+      function loadLocalState() {
+        const storedUnits = localStorage.getItem(unitsKey);
+        if (storedUnits) {
+          unitsSelect.value = storedUnits;
+        }
+
+        const storedMode = localStorage.getItem(pinModeKey);
+        if (storedMode) {
+          const input = document.querySelector(`[name="pin-mode"][value="${storedMode}"]`);
+          if (input) {
+            input.checked = true;
+          }
+        }
+
+        const storedStart = localStorage.getItem(startKey);
+        if (storedStart) {
+          try {
+            routeStart = JSON.parse(storedStart);
+          } catch (e) {}
+        }
+
+        const storedEnd = localStorage.getItem(endKey);
+        if (storedEnd) {
+          try {
+            routeEnd = JSON.parse(storedEnd);
+          } catch (e) {}
+        }
+
+        const storedHistory = localStorage.getItem(historyKey);
+        if (storedHistory) {
+          try {
+            historyEntries = JSON.parse(storedHistory);
+          } catch (e) {
+            historyEntries = [];
+          }
+        }
+      }
+
+      function saveHistory() {
+        localStorage.setItem(historyKey, JSON.stringify(historyEntries));
+        renderHistory();
+      }
+
+      function addHistory(query) {
+        const trimmed = query.trim();
+        if (!trimmed) return;
+        historyEntries = historyEntries.filter((item) => item.query !== trimmed);
+        historyEntries.unshift({ query: trimmed, ts: Date.now() });
+        if (historyEntries.length > 6) historyEntries.pop();
+        saveHistory();
+      }
+
+      function renderHistory() {
+        historyList.innerHTML = '';
+        if (!historyEntries.length) {
+          historyList.textContent = 'No recent searches.';
+          return;
+        }
+        historyEntries.forEach((entry) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'history-item';
+          button.textContent = entry.query;
+          button.addEventListener('click', () => {
+            searchInput.value = entry.query;
+            searchForm.dispatchEvent(new Event('submit', { cancelable: true }));
+          });
+          historyList.appendChild(button);
+        });
+      }
+
+      function getActivePinMode() {
+        const selected = document.querySelector('[name="pin-mode"]:checked');
+        return selected ? selected.value : 'start';
+      }
+
+      function savePinMode(value) {
+        localStorage.setItem(pinModeKey, value);
+        updatePinHint();
+      }
+
+      function updatePinHint(extra) {
+        const mode = getActivePinMode();
+        if (mode === 'off') {
+          pinHint.textContent = 'Pins are disabled. Select Start or End before clicking the map.';
+          return;
+        }
+        pinHint.textContent = extra || `Click the map to place ${mode === 'start' ? 'Start' : 'End'} pin.`;
+      }
+
+      function formatPinLabel(data) {
+        if (!data) return 'unset';
+        return data.label || `${data.lat.toFixed(5)}, ${data.lon.toFixed(5)}`;
+      }
+
+      function buildMarker(className) {
+        const el = document.createElement('div');
+        el.className = `pin-icon ${className}`;
+        return el;
+      }
+
+      function setStart(data, persist = true) {
+        routeStart = data;
+        if (startMarker) startMarker.remove();
+        if (data) {
+          startMarker = new maplibregl.Marker(buildMarker('start')).setLngLat(data.lon ? [data.lon, data.lat] : [0, 0]).addTo(map);
+          localStorage.setItem(startKey, JSON.stringify(data));
+          if (persist) swapButton.disabled = !routeEnd;
+        } else {
+          startMarker = null;
+          localStorage.removeItem(startKey);
+          swapButton.disabled = true;
+        }
+        startChip.textContent = formatPinLabel(data);
+        maybeRoute();
+        clearButton.disabled = !(routeStart || routeEnd);
+      }
+
+      function setEnd(data, persist = true) {
+        routeEnd = data;
+        if (endMarker) endMarker.remove();
+        if (data) {
+          endMarker = new maplibregl.Marker(buildMarker('end')).setLngLat(data.lon ? [data.lon, data.lat] : [0, 0]).addTo(map);
+          localStorage.setItem(endKey, JSON.stringify(data));
+          if (persist) swapButton.disabled = !routeStart;
+        } else {
+          endMarker = null;
+          localStorage.removeItem(endKey);
+          swapButton.disabled = true;
+        }
+        endChip.textContent = formatPinLabel(data);
+        maybeRoute();
+        clearButton.disabled = !(routeStart || routeEnd);
+      }
+
+      function swapEndpoints() {
+        const tempStart = routeStart;
+        setStart(routeEnd, false);
+        setEnd(tempStart, false);
+        maybeRoute();
+      }
+
+      function clearRoute() {
+        setStart(null, false);
+        setEnd(null, false);
+        removeRoute();
+        statusText.textContent = 'Ready.';
+        routeSummary = null;
+        routeSummaryText.textContent = 'Route: none';
+        swapButton.disabled = true;
+        clearButton.disabled = true;
+        localStorage.removeItem(startKey);
+        localStorage.removeItem(endKey);
+      }
+
+      function ensureRouteLayer(geojson) {
+        if (map.getSource(routeSourceId)) {
+          map.getSource(routeSourceId).setData(geojson);
+          return;
+        }
+        map.addSource(routeSourceId, { type: 'geojson', data: geojson });
+        map.addLayer({
+          id: routeHaloId,
+          type: 'line',
+          source: routeSourceId,
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': 'rgba(255, 255, 255, 0.6)', 'line-width': 14 },
+        });
+        map.addLayer({
+          id: routeLineId,
+          type: 'line',
+          source: routeSourceId,
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': '#4285f4', 'line-width': 6, 'line-opacity': 0.9 },
+        });
+      }
+
+      function removeRoute() {
+        [routeLineId, routeHaloId].forEach((layerId) => {
+          if (map.getLayer(layerId)) map.removeLayer(layerId);
+        });
+        if (map.getSource(routeSourceId)) map.removeSource(routeSourceId);
+      }
+
+      function formatDistance(meters) {
+        if (unitsSelect.value === 'imperial') {
+          return `${(meters * 0.000621371).toFixed(1)} mi`;
+        }
+        return `${(meters / 1000).toFixed(1)} km`;
+      }
+
+      function formatDuration(seconds) {
+        const minutes = Math.ceil(seconds / 60);
+        return `${minutes} min`;
+      }
+
+      function updateRouteSummary(data) {
+        routeSummary = data;
+        routeSummaryText.textContent = `Route: ${formatDistance(data.distance)} · ${formatDuration(data.duration)}`;
+      }
+
+      async function maybeRoute() {
+        if (!routeStart || !routeEnd) {
+          return;
+        }
+        statusText.textContent = 'Calculating route...';
+        try {
+          const resp = await fetch(
+            `https://router.project-osrm.org/route/v1/driving/${routeStart.lon},${routeStart.lat};${routeEnd.lon},${routeEnd.lat}?overview=full&geometries=geojson`
+          );
+          const data = await resp.json();
+          if (!data.routes || !data.routes.length) {
+            statusText.textContent = 'Routing failed—we could not find a route.';
+            return;
+          }
+          const route = data.routes[0];
+          ensureRouteLayer({ type: 'FeatureCollection', features: [{ type: 'Feature', geometry: route.geometry }] });
+          updateRouteSummary({ distance: route.distance, duration: route.duration });
+          statusText.textContent = 'Route ready.';
+          swapButton.disabled = false;
+        } catch (error) {
+          console.error(error);
+          statusText.textContent = 'Routing failed. Try again later.';
+        }
+      }
+
+      function updateRouteSummaryText() {
+        if (!routeSummary) return;
+        routeSummaryText.textContent = `Route: ${formatDistance(routeSummary.distance)} · ${formatDuration(routeSummary.duration)}`;
+      }
+
+      function reverseGeocode(lat, lon) {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+        return fetch(url)
+          .then((res) => res.json())
+          .then((data) => data.display_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`)
+          .catch(() => `${lat.toFixed(5)}, ${lon.toFixed(5)}`);
+      }
+
+      async function placePin(mode, lngLat) {
+        const label = await reverseGeocode(lngLat.lat, lngLat.lng);
+        const payload = { lat: lngLat.lat, lon: lngLat.lng, label };
+        if (mode === 'start') {
+          setStart(payload);
+        } else if (mode === 'end') {
+          setEnd(payload);
+        }
+        updatePinHint(`${mode === 'start' ? 'Start' : 'End'} pin set to ${label}.`);
+        statusText.textContent = `${mode === 'start' ? 'Start' : 'End'} point locked.`;
+      }
+
+      map.on('click', (event) => {
+        const mode = getActivePinMode();
+        if (mode === 'off') return;
+        placePin(mode, event.lngLat);
+      });
+
+      function handleCurrentLocation() {
+        if (!navigator.geolocation) {
+          statusText.textContent = 'Geolocation is not supported in this browser.';
+          return;
+        }
+        statusText.textContent = 'Locating you...';
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const mode = getActivePinMode() === 'off' ? 'start' : getActivePinMode();
+            const { latitude, longitude } = position.coords;
+            map.flyTo({ center: [longitude, latitude], zoom: 14 });
+            placePin(mode, { lat: latitude, lon: longitude });
+          },
+          () => {
+            statusText.textContent = 'Location access denied.';
+          }
+        );
+      }
+
+      function runSearch(query) {
+        if (!query) return;
+        searchButton.classList.add('loading');
+        statusText.textContent = 'Searching...';
+        resultsContainer.textContent = '';
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=6&q=${encodeURIComponent(query)}`, {
+          headers: { 'Accept-Language': 'en' },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            lastResults = data;
+            renderResults(data);
+            addHistory(query);
+            hasRunSearch = true;
+            if (!routeStart && !routeEnd) {
+              const first = data[0];
+              if (first) map.flyTo({ center: [parseFloat(first.lon), parseFloat(first.lat)], zoom: 14 });
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            statusText.textContent = 'Geocoding failed. Try again later.';
+          })
+          .finally(() => {
+            searchButton.classList.remove('loading');
+          });
+      }
+
+      function renderResults(results) {
+        resultsContainer.innerHTML = '';
+        if (!results.length) {
+          resultsContainer.textContent = 'No results.';
+          statusText.textContent = 'No matches found.';
+          return;
+        }
+        results.forEach((result, index) => {
+          const row = document.createElement('button');
+          row.type = 'button';
+          row.className = 'result-row';
+          row.innerHTML = `
+            <strong>${result.display_name}</strong>
+            <small>${result.type}</small>
+          `;
+          row.addEventListener('click', () => {
+            resultsContainer.querySelectorAll('.result-row').forEach((el) => el.classList.remove('active'));
+            row.classList.add('active');
+            map.flyTo({ center: [parseFloat(result.lon), parseFloat(result.lat)], zoom: 14 });
+            statusText.textContent = `Centered on ${result.display_name}`;
+          });
+          resultsContainer.appendChild(row);
+        });
+        statusText.textContent = `Showing ${results.length} result${results.length === 1 ? '' : 's'}.`;
+      }
+
+      searchForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const query = searchInput.value.trim();
+        if (!query) return;
+        runSearch(query);
+        historyList.scrollTop = 0;
+        const url = new URL(window.location);
+        url.searchParams.set('s', query);
+        history.replaceState(null, '', url.toString());
+      });
+
+      unitsSelect.addEventListener('change', () => {
+        localStorage.setItem(unitsKey, unitsSelect.value);
+        updateRouteSummaryText();
+      });
+
+      document.querySelectorAll('[data-pin-mode]').forEach((input) => {
+        input.addEventListener('change', () => {
+          savePinMode(input.value);
+        });
+      });
+
+      swapButton.addEventListener('click', () => swapEndpoints());
+      clearButton.addEventListener('click', () => clearRoute());
+      useLocationButton.addEventListener('click', () => handleCurrentLocation());
+
+      map.on('load', () => {
+        updateCoords();
+        loadLocalState();
+        renderHistory();
+        updatePinHint();
+        if (routeStart) {
+          setStart(routeStart, false);
+          map.flyTo({ center: [routeStart.lon, routeStart.lat], zoom: 12 });
+        }
+        if (routeEnd) setEnd(routeEnd, false);
+        if (routeStart && routeEnd) maybeRoute();
+        if (initialSearch) {
+          searchInput.value = initialSearch;
+          runSearch(initialSearch);
+        } else if (!hasRunSearch && !routeStart && !routeEnd) {
+          handleCurrentLocation();
+        }
+      });
+    </script>
+  </body>
+</html>
