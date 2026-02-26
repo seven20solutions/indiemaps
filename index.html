@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f1f4fe" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <title>Indie Maps</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" />
     <style>
       :root {
@@ -150,6 +155,34 @@
 
       .hidden {
         display: none !important;
+      }
+
+      body.embed-mode {
+        background: transparent;
+      }
+
+      .embed-mode .shell {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+      }
+
+      .embed-mode header,
+      .embed-mode .toolbar,
+      .embed-mode .search-area,
+      .embed-mode .results,
+      .embed-mode .history-shell,
+      .embed-mode .status-bar {
+        display: none;
+      }
+
+      .embed-mode .map-shell {
+        border-radius: 0;
+        border: none;
+        padding: 0;
+        box-shadow: none;
+        background: transparent;
       }
 
       .results-header {
@@ -391,6 +424,7 @@
       const params = new URLSearchParams(window.location.search);
       const initialPrimaryParam = params.get('s');
       const initialDestParam = params.get('d');
+      const isEmbed = params.get('embed') === '1';
 
       let historyEntries = [];
       let primaryQuery = '';
@@ -408,6 +442,10 @@
       const routeSourceId = 'route-source';
       const routeLineId = 'route-line';
       const routeHaloId = 'route-line-halo';
+
+      if (isEmbed) {
+        document.body.classList.add('embed-mode');
+      }
 
       map.on('move', () => {
         const center = map.getCenter();
