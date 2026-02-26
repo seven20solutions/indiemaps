@@ -438,6 +438,7 @@
       let destVisible = false;
       let userLocationMarker = null;
       let locationWatchId = null;
+      let lastKnownLocation = null;
 
       const routeSourceId = 'route-source';
       const routeLineId = 'route-line';
@@ -465,6 +466,7 @@
         if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
           return;
         }
+        lastKnownLocation = { lat, lon };
         if (userLocationMarker) {
           userLocationMarker.setLngLat([lon, lat]);
           return;
@@ -770,6 +772,9 @@
         statusText.textContent = 'Ready.';
         removeRouteLayer();
         updateURL();
+        if (lastKnownLocation) {
+          map.flyTo({ center: [lastKnownLocation.lon, lastKnownLocation.lat], zoom: 12 });
+        }
       }
 
       function renderResults(results, mode) {
